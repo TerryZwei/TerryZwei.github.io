@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title><![CDATA[js继承]]></title>
+    <url>%2F2016%2F12%2F23%2Fjs-inherit%2F</url>
+    <content type="text"><![CDATA[先定义两个构造函数1234567function Parent() &#123; this.age=50;&#125;function Child(name, height) &#123; this.name = name; this.height = height;&#125; 构造函数绑定实现构造函数的时候直接调用apply或者call，实现继承1234567function Child(name, height) &#123; Parent.apply(this, arguments); this.name = name; this.height = height;&#125;var c = new Child('小明', '175');c.age; // 50 Prototype模式使用构造函数的prototype实现继承123456// 设置Child的prototype指向Parent的实例，这样就Child就能实现继承Child.prototype = new Parent();// prototype里面有一个constructor的属性，constructor属性指的就是它的构造函数，因为上面把prototype重现赋值了，所以现在指向的是Parent，如果不重新指向Child的话就会出现继承链紊乱了。Child.prototype.constructor = Child;var c = new Child('小明', '175');c.age; // 50 Prototype直接继承对Parent方法进行重写12function Parent()&#123; &#125;Parent.prototype.age = 50; 这是对Prototype模式的改进，不用实例化Parent。1234Child.prototype = Parent.prototype;Child.prototype.constructor = Child;var c = new Child('小明', '175');c.age; // 50 不过这里会出现一个问题，就是Parent的prototype上的属性发生改变，Child也会跟着变化。 Prototype使用空对象实现继承这是为了解决上面的直接继承的问题才出现的继承方法。123456789// 先定义一个空的构造方法function T() &#123;&#125;;// 把空对象的原型prototype指向了Parent的prototypeT.prototype = Parent.prototype;// 实例化一个T对象，赋值给Child的prototype属性，实现继承Child.prototype = new T();Child.prototype.constructor = Child;var c = new Child('小明', '175');c.age; // 50 非构造函数实现继承1var Parent = &#123;sex: 1&#125;; 如果不是构造函数要实现继承的话，可以使用以下三种方式： object()方法12345678function object(o) &#123; var F = function () &#123;&#125;; F.prototype = o; return new F();&#125;var Child = object(Parent);Child.age = 10;Child.sex; // 1 浅复制123456789function copy(o) &#123; var c = &#123;&#125;; for (var i in o) &#123; c[i] = o[i] &#125; return c;&#125;var Child =copy(Parent);Child.sex; // 1 深复制1234567891011121314151617var Parent = &#123;sex: 1, arr: [1, 2, 3]&#125;;function deepCopy(o, c) &#123; var c = c || &#123;&#125;; for (var i in o) &#123; if (typeof o[i] === 'object') &#123; c[i] = (o[i].constructor === Array)? [] : &#123;&#125;; deepCopy(o[i], c[i]); &#125; else &#123; c[i] = o[i] &#125; &#125; return c;&#125;var Child = deepCopy(Parent);Child.arr.push(4);Child.arr; // [1, 2, 3, 4]Parent.arr; // [1, 2, 3]]]></content>
+      <tags>
+        <tag>javascript</tag>
+      </tags>
+  </entry>
+</search>
